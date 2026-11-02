@@ -1,0 +1,91 @@
+/**
+ * @name IntereaBlue
+ * @author Gibbu (original theme), LeonTheFVN (customization)
+ * @version 2.2.0
+ * @description FrostedGlass customized with a custom home button image, emoji picker background and User Settings background.
+ * @source https://github.com/DiscordStyles/FrostedGlass
+ * @invite ZHthyCw
+ * @BDEditor Frosted Glass
+ *
+ * Based on FrostedGlass by Gibbu. Customized by LeonTheFVN (https://github.com/LeonTheFVN).
+ * Images: illustrations from the visual novel Interea by Echo Project (https://echoproject.itch.io/interea).
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;700&display=swap');
+@import url('https://discordstyles.github.io/FrostedGlass/FrostedGlass.css');
+@import url('https://discordstyles.github.io/Addons/windows-titlebar.css');
+
+:root {
+  --background-image: url('https://i.imgur.com/hWeW5ib.jpeg');
+  --background-image-blur: 7px;
+  --background-image-size: cover;
+  --background-image-position: center;
+  --popout-image: url('https://i.imgur.com/9YiBaBV.jpeg');
+  --popout-image-blur: 5px;
+  --popout-image-size: cover;
+  --popout-image-position: center;
+  --overlay-image: url('https://i.imgur.com/EwtlFIv.jpeg');
+  --overlay-image-blur: 5px;
+  --overlay-image-size: cover;
+  --overlay-image-position: center;
+  --home-button-image: url('https://i.imgur.com/FS97xFR.png');
+  --home-button-size: cover;
+  --home-button-position: center;
+  --serverlist-brightness: 0.8;
+  --left-brightness: 0.8;
+  --middle-brightness: 0.6;
+  --right-brightness: 0;
+  --overlay-brightness: 0.75;
+  --gradient-primary: 103,58,183;
+  --gradient-secondary: 63,81,181;
+  --link-colour: #00b0f4;
+  --scrollbar-colour: rgba(255,255,255,0.05);
+  --gradient-direction: 320deg;
+  --tint-colour: 255,51,159;
+  --tint-brightness: 0;
+  --font: Montserrat;
+  --window-padding: 20px;
+  --window-roundness: 10px;
+  --update-notice-1: none;
+}
+
+/* Any custom CSS below here */
+
+/* Custom fixes by LeonTheFVN: home button image, emoji picker background, User Settings background */
+
+/* Home button: show --home-button-image and hide the default Discord icon */
+[data-list-item-id="guildsnav___home"] [class*="childWrapper"] {
+  background-image: var(--home-button-image) !important;
+  background-size: var(--home-button-size) !important;
+  background-position: var(--home-button-position) !important;
+  background-repeat: no-repeat !important;
+}
+[data-list-item-id="guildsnav___home"] svg {
+  opacity: 0 !important;
+}
+
+/* Emoji picker: popout image with a dark layer so emojis stay readable */
+[aria-label="Expression Picker"] [class*="contentWrapper"] {
+  background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), var(--popout-image) !important;
+  background-size: cover !important;
+  background-position: center !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* User Settings window: popout image with a dark layer, inner panels made transparent so it shows through */
+[data-mana-component="layer-modal"]:has(nav[aria-label="Settings pages"]) [class*="modalContent"] {
+  background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), var(--popout-image) !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+[data-mana-component="layer-modal"]:has(nav[aria-label="Settings pages"]) [class*="modalContentInner"] > [class*="container_"],
+[data-mana-component="layer-modal"]:has(nav[aria-label="Settings pages"]) [class*="container_"] > aside,
+[data-mana-component="layer-modal"]:has(nav[aria-label="Settings pages"]) [class*="container_"] > div[class*="content_"] {
+  background: transparent !important;
+}
+
+/* User Settings title bar (the "Account" header strip): transparent too */
+[data-mana-component="layer-modal"]:has(nav[aria-label="Settings pages"]) [class*="contentHeader_"] {
+  background: transparent !important;
+}
