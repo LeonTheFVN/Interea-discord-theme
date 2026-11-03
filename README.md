@@ -8,11 +8,11 @@ FrostedGlass already gives you a custom picture with adjustable blur and brightn
 
 | Main window | Home button |
 | --- | --- |
-| ![Main window](Preview/background.png) | ![Home button](Preview/home-button.png) |
+| ![Main window](Preview/Background.png) | ![Home button](Preview/Home-button.png) |
 
 | User Settings | Right-click menu |
 | --- | --- |
-| ![User Settings](Preview/Overlay.png) | ![Right-click menu](Preview/popout-context-menu.png) |
+| ![User Settings](Preview/Overlay.png) | ![Right-click menu](Preview/Popout-context-menu.png) |
 
 ## What's customized
 
