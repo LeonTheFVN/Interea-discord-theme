@@ -1,19 +1,41 @@
 /**
  * @name IntereaBlue
  * @author Gibbu (original theme), LeonTheFVN (customization)
- * @version 2.2.0
- * @description FrostedGlass customized with a custom home button image, emoji picker background and User Settings background.
+ * @version 2.5.0
+ * @description FrostedGlass customized with a custom home button image, emoji picker background, User Settings background, a title bar strip, a frosted-glass look rebuilt for current Discord, and a light "cozy white" variant.
  * @source https://github.com/DiscordStyles/FrostedGlass
  * @invite ZHthyCw
  * @BDEditor Frosted Glass
  *
  * Based on FrostedGlass by Gibbu. Customized by LeonTheFVN (https://github.com/LeonTheFVN).
- * Images: illustrations from the visual novel Interea by Echo Project (https://echoproject.itch.io/interea).
+ * Images: illustrations from the visual novel Interea by Echo Project.
 */
+
+/*
+ * CHANGES FROM THE ORIGINAL FROSTEDGLASS (by LeonTheFVN)
+ *
+ * Kept from FrostedGlass: the base import (fonts, general styling), the image variables
+ * (--background-image, --popout-image, --home-button-image), and the window padding/roundness settings.
+ *
+ * Rebuilt or added:
+ *  - Background: FrostedGlass's own background stopped working after a Discord update. It is now drawn
+ *    on Discord's own background layer and blurred with --blur-base.
+ *  - Floating window: the app sits as a rounded window inside the picture (--window-padding, --window-roundness).
+ *  - Haze system: replaces the old blur/brightness settings with a see-through veil per area
+ *    (--haze-side, --haze-chat, --haze-user, --haze-input), set by one colour (--haze-colour).
+ *  - Title bar: its own haze, a slight blur and a thin edge. The old windows-titlebar addon was removed
+ *    because it hid the window buttons.
+ *  - Member list: fixed a double layer that made it much darker than the chat.
+ *  - Home button: new selector so the custom image works with current Discord.
+ *  - Emoji picker: background using the popout image with a readability layer.
+ *  - User Settings: full-window picture and a transparent title bar.
+ *  - "Cozy white": a light variant for Discord's Light theme (--light-haze-*, --light-text-colour).
+ *
+ * Settings are at the top of the :root block. The custom rules are under "Any custom CSS below here".
+ */
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;700&display=swap');
 @import url('https://discordstyles.github.io/FrostedGlass/FrostedGlass.css');
-@import url('https://discordstyles.github.io/Addons/windows-titlebar.css');
 
 :root {
   --background-image: url('https://i.imgur.com/hWeW5ib.jpeg');
@@ -47,11 +69,121 @@
   --window-padding: 20px;
   --window-roundness: 10px;
   --update-notice-1: none;
+
+  /* ===== Frosted-glass look (these replace the old blur/brightness settings above) ===== */
+  --blur-base: 5px;         /* blur of the whole picture */
+  --haze-colour: 0,0,0;     /* the veil colour (R, G, B). Try 20,25,50 for a softer blue-black */
+  --haze-side: 0.50;        /* server list + channel list */
+  --haze-chat: 0.14;        /* chat area + member list (lower = lighter) */
+  --haze-user: 0.50;        /* bottom user panel */
+  --haze-input: 0.10;       /* message box */
+  --haze-titlebar: 0.35;    /* title bar strip at the top (a bit darker so it reads as separate) */
+  --blur-titlebar: 6px;     /* extra blur behind the title bar */
+
+  /* ===== "Cozy white" (Discord's Light theme): a milky white veil instead of black ===== */
+  --light-haze-colour: 255,255,255;  /* veil colour in Light mode (R, G, B) */
+  --light-haze-side: 0.55;           /* channel list */
+  --light-haze-chat: 0.50;           /* chat area + member list */
+  --light-haze-user: 0.55;           /* bottom user panel */
+  --light-haze-input: 0.60;          /* message box */
+  --light-haze-titlebar: 0.55;       /* title bar strip in Light mode */
+  --light-overlay: 0.55;            /* settings window + emoji picker (white layer over the picture) */
+  --light-text-colour: #606063;      /* chat message text in Light mode (match your channel names) */
+  --light-text-muted-colour: #707075; /* secondary text in Light mode: member list headings, status lines, channel intro */
+  --titlebar-space: 30px;   /* top gap above the window, for the minimise/maximise/close buttons */
 }
 
 /* Any custom CSS below here */
 
-/* Custom fixes by LeonTheFVN: home button image, emoji picker background, User Settings background */
+/* Custom fixes by LeonTheFVN: frosted-glass background, home button image, emoji picker background, User Settings background and title bar */
+
+/* Background: drawn on Discord's own background layer, blurred by --blur-base.
+   It's slightly oversized so the blurred edges don't fade out. */
+[class*="app_"] > div[class*="bg_"] {
+  position: fixed !important;
+  inset: calc(var(--blur-base) * -2) !important;
+  z-index: 0 !important;
+  background-image: var(--background-image) !important;
+  background-size: var(--background-image-size) !important;
+  background-position: var(--background-image-position) !important;
+  background-repeat: no-repeat !important;
+  filter: blur(var(--blur-base)) !important;
+}
+
+/* The app as a rounded window floating inside the picture.
+   The top gap is at least --titlebar-space so the window buttons fit above it. */
+[class*="app_"] > div[class*="layers_"] {
+  position: fixed !important;
+  inset: max(var(--window-padding), var(--titlebar-space)) var(--window-padding) var(--window-padding) !important;
+  border-radius: var(--window-roundness) !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+}
+
+/* Window buttons (minimise / maximise / close): keep them above the window */
+[class*="systemBar_"] {
+  z-index: 99999 !important;
+}
+
+/* Discord's panel colours become a soft haze */
+.theme-darker, .theme-dark {
+  --background-base-lowest: rgba(var(--haze-colour), var(--haze-side)) !important;
+  --background-base-lower: rgba(var(--haze-colour), var(--haze-chat)) !important;
+  --background-base-low: rgba(var(--haze-colour), var(--haze-user)) !important;
+  --chat-background-default: rgba(var(--haze-colour), var(--haze-input)) !important;
+}
+
+/* "Cozy white": the same idea for Discord's Light theme, with a white veil so the dark text stays readable.
+   Parts Discord keeps on the dark theme (server list, title bar) keep the dark veil above. */
+.theme-light {
+  --background-base-lowest: rgba(var(--light-haze-colour), var(--light-haze-side)) !important;
+  --background-base-lower: rgba(var(--light-haze-colour), var(--light-haze-chat)) !important;
+  --background-base-low: rgba(var(--light-haze-colour), var(--light-haze-user)) !important;
+  --chat-background-default: rgba(var(--light-haze-colour), var(--light-haze-input)) !important;
+}
+
+/* Cozy white: chat text darkened so it matches the channel names.
+   Covers sent messages, the reply preview inside a message, the text you type, and the "Replying to" bar. */
+html.theme-light [id^="message-content-"],
+html.theme-light [class*="repliedTextContent_"],
+html.theme-light [class*="channelTextArea_"] [data-slate-editor="true"],
+html.theme-light [class*="channelTextArea_"] [data-slate-string="true"],
+html.theme-light [class*="replyBar_"],
+html.theme-light [class*="replyBar_"] [class*="replyLabel_"] {
+  color: var(--light-text-colour) !important;
+}
+
+/* Cozy white: secondary text (member list headings, status lines under names, the empty-channel intro) */
+html.theme-light [class*="membersGroup_"],
+html.theme-light [class*="membersGroupHeader_"],
+html.theme-light [class*="subText_"],
+html.theme-light [class*="customStatusContent_"],
+html.theme-light [id^="chat-messages-"] [class*="description_"] {
+  color: var(--light-text-muted-colour) !important;
+}
+
+/* Cozy white: the blinking text cursor in the message box, same colour as the text */
+html.theme-light [class*="channelTextArea_"] [data-slate-editor="true"] {
+  caret-color: var(--light-text-colour) !important;
+}
+
+/* Title bar: its own haze, a slight blur and a thin edge so it reads as separate from the background */
+[data-window-chrome="true"] {
+  background-color: rgba(var(--haze-colour), var(--haze-titlebar)) !important;
+  backdrop-filter: blur(var(--blur-titlebar));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Cozy white: the title bar gets the milky veil instead of the black one */
+html.theme-light [data-window-chrome="true"] {
+  background-color: rgba(var(--light-haze-colour), var(--light-haze-titlebar)) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Member list is painted by two nested layers; paint it once */
+[class*="layers_"] aside[class*="membersWrap_"] [class*="members_"] {
+  background-color: transparent !important;
+}
 
 /* Home button: show --home-button-image and hide the default Discord icon */
 [data-list-item-id="guildsnav___home"] [class*="childWrapper"] {
@@ -82,6 +214,30 @@
 [data-mana-component="layer-modal"]:has(nav[aria-label="Settings pages"]) [class*="modalContentInner"] > [class*="container_"],
 [data-mana-component="layer-modal"]:has(nav[aria-label="Settings pages"]) [class*="container_"] > aside,
 [data-mana-component="layer-modal"]:has(nav[aria-label="Settings pages"]) [class*="container_"] > div[class*="content_"] {
+  background: transparent !important;
+}
+
+/* Cozy white: light layer instead of the dark one on the emoji picker and settings window */
+html.theme-light [aria-label="Expression Picker"] [class*="contentWrapper"],
+html.theme-light [data-mana-component="layer-modal"]:has(nav[aria-label="Settings pages"]) [class*="modalContent"] {
+  background-image: linear-gradient(rgba(var(--light-haze-colour), var(--light-overlay)), rgba(var(--light-haze-colour), var(--light-overlay))), var(--popout-image) !important;
+}
+
+/* Cozy white: right-click menus get the same light layer, so their dark text stays readable.
+   The menu is div.menu_xxx[role="menu"] inside a popover layer. */
+html.theme-light [data-popover-layer] [role="menu"],
+html.theme-light div[class^="menu_"] {
+  background-color: transparent !important;
+  background-image: linear-gradient(rgba(var(--light-haze-colour), var(--light-overlay)), rgba(var(--light-haze-colour), var(--light-overlay))), var(--overlay-image) !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+/* ...and switch off any dark layer drawn on top of the menu (pseudo-elements) or inside it (the scroller) */
+html.theme-light [data-popover-layer] [role="menu"]::before,
+html.theme-light [data-popover-layer] [role="menu"]::after {
+  display: none !important;
+}
+html.theme-light [data-popover-layer] [role="menu"] [class*="scroller_"] {
   background: transparent !important;
 }
 
