@@ -130,4 +130,4 @@ The veil strengths go from `0` (clear) to `1` (solid). The older FrostedGlass br
 
 - **Theme base:** [FrostedGlass](https://github.com/DiscordStyles/FrostedGlass) by Gibbu (MIT license). Please keep this credit if you fork or share it.
 - **Customization:** [LeonTheFVN](https://github.com/LeonTheFVN)
-- **Images:** illustrations from the visual novel [Interea](https://echoproject.itch.io/interea), developed by the [Echo Project](https://echoproject.itch.io/) team. The images are linked from external hosting and are not part of this repository. All rights belong to their creators.
+- **Images:** illustrations from the visual novel [Interea](https://echoproject.itch.io/interea), developed by the [Echo Project](https://echoproject.itch.io/) team. The theme's pictures are hosted in this repository (`Images/Assets`) only so the theme can load them; all rights belong to their creators.
